@@ -1,22 +1,16 @@
-package com.officelibrary.library.junit;
-
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+package com.officelibrary.library.assertj;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import com.officelibrary.library.exposure.model.Author;
 import com.officelibrary.library.exposure.model.Book;
 import com.officelibrary.library.exposure.model.Category;
 import com.officelibrary.library.exposure.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
-class BookServiceTestJunit {
+class BookServiceTestAssertJ {
 
     private static final List<Book> library = Arrays.asList(
         new Book("Ulysses", "Ulysses chronicles", List.of(new Author("James", "Joyce")), new Category("Myths")),
@@ -33,23 +27,6 @@ class BookServiceTestJunit {
     @BeforeEach
     void reset() {
         bookService = new BookService();
-    }
-
-    @Test
-    void addAndGetASingleBookTest() {
-        //given
-        bookService.addBook(library.get(0));
-
-        //when
-        Optional<Book> bookOptional = bookService.getBookByTitle("Ulysses");
-        assertTrue(bookOptional.isPresent());
-        Book book = bookOptional.get();
-        assertAll(
-            "Assert Ulysses is present",
-            () -> assertEquals("Ulysses", book.getTitle()),
-            () -> assertEquals(library.get(0).getAuthors().get(0), book.getAuthors().get(0)),
-            () -> assertEquals(library.get(0).getDescription(), book.getDescription(), "Descriptions must match")
-        );
     }
 
 }

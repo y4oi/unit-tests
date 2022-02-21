@@ -3,6 +3,7 @@ package com.officelibrary.library.exposure.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.officelibrary.library.exposure.model.Book;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,16 @@ public class BookService {
 
     public Optional<Book> getBookById(int id) {
         return this.books.stream().filter(book -> book.getUniqueID() == id).findAny();
+    }
+
+    public Optional<List<Book>> getBookByCategory(String categoryId) {
+        return Optional.of(this.books.stream()
+            .filter(book -> {
+                if (book.getCategory() != null) {
+                    return book.getCategory().getName().equals(categoryId);
+                }
+                return false;
+            }).collect(Collectors.toList()));
     }
 
     public List<Book> deleteBook(Book book) {
