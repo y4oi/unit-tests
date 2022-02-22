@@ -2,6 +2,7 @@ package com.officelibrary.library.junit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -50,6 +51,41 @@ class BookServiceTestJunit {
             () -> assertEquals(library.get(0).getAuthors().get(0), book.getAuthors().get(0)),
             () -> assertEquals(library.get(0).getDescription(), book.getDescription(), "Descriptions must match")
         );
+    }
+
+    @Test
+    void retrieveBookTest() {
+        bookService.addBook(library.get(0));
+
+        Optional<Book> bookOptional = bookService.getBookByTitle("Ulysses");
+        assertTrue(bookOptional.isPresent());
+    }
+
+    @Test
+    void addMultipleBooksTest() {
+        library.forEach(bookService::addBook);
+
+        assertEquals(4, bookService.getBooks().size());
+    }
+
+    @Test
+    void addBooksWithDuplicateTest() {
+        library.forEach(bookService::addBook);
+        library.forEach(bookService::addBook);
+        assertEquals(8, bookService.getBooks().size());
+    }
+
+    @Test
+    void deleteABookTest() {
+        library.forEach(bookService::addBook);
+
+        Book bookToDelete = library.get(2);
+        bookService.deleteBook(bookToDelete);
+
+        List<Book> books = bookService.getBooks();
+        assertEquals(3, books.size());
+        assertFalse(books.stream().anyMatch(b -> b.equals(bookToDelete)));
+        assertEquals(3, library.stream().filter(books::contains).count());
     }
 
 }

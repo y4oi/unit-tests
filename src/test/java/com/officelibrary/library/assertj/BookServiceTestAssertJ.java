@@ -1,13 +1,18 @@
 package com.officelibrary.library.assertj;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.officelibrary.library.exposure.model.Author;
 import com.officelibrary.library.exposure.model.Book;
 import com.officelibrary.library.exposure.model.Category;
 import com.officelibrary.library.exposure.service.BookService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 class BookServiceTestAssertJ {
@@ -27,6 +32,45 @@ class BookServiceTestAssertJ {
     @BeforeEach
     void reset() {
         bookService = new BookService();
+    }
+
+    @Test
+    void retrieveBookTest() {
+        bookService.addBook(library.get(0));
+
+        Optional<Book> bookOptional = bookService.getBookByTitle("Ulysses");
+
+        Assertions.assertThat(bookOptional)
+                .isPresent();
+    }
+
+
+    @Test
+    void addMultipleBooksTest() {
+        library.forEach(bookService::addBook);
+
+       // assertEquals(4, bookService.getBooks().size());
+        Assertions.assertThat(bookService.getBooks().size()).isEqualTo(4);
+    }
+
+    @Test
+    void addBooksWithDuplicateTest() {
+        library.forEach(bookService::addBook);
+        library.forEach(bookService::addBook);
+        Assertions.assertThat(bookService.getBooks().size()).isEqualTo(8);
+    }
+
+    @Test
+    void deleteABookTest() {
+        library.forEach(bookService::addBook);
+
+        Book bookToDelete = library.get(2);
+        bookService.deleteBook(bookToDelete);
+
+        List<Book> books = bookService.getBooks();
+        assertEquals(3, books.size());
+        //assertFalse(books.stream().anyMatch(b -> b.equals(bookToDelete)));
+        assertEquals(3, library.stream().filter(books::contains).count());
     }
 
 }
