@@ -1,5 +1,7 @@
 package com.officelibrary.library.hamcrest;
 
+import static org.hamcrest.Matchers.equalTo;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +15,6 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 class BookServiceTestHamcrest {
 
