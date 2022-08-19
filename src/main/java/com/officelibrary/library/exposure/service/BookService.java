@@ -57,6 +57,7 @@ public class BookService {
     }
 
     public void updateBook(int id, Book newBook) {
-        this.books.set(books.indexOf(getBookById(id).orElseThrow()), newBook);
+        this.books.set(books.indexOf(getBookById(id).orElseThrow(() -> new RuntimeException("Book with id: " + id + " has not been found"))),
+            newBook);
     }
 }
